@@ -1,0 +1,389 @@
+DART 
+
+REPASAR:
+* Constructor / métodos de clases
+* Abstracts + Extends (SUPER())
+* (OJO) MIXIN
+* Future, async, await
+
+/*
+
+EJEMPLO 2
+
+*/
+
+void main() {
+  
+  bool? isActive = null;
+  
+  if ( isActive == null ) {
+    print('isActive es null');
+  } else {
+    print('No es null');
+  }
+} 
+
+/*
+
+EJEMPLO 3
+
+*/
+
+void main() {
+  
+  List<int> numeros = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  
+  numeros.add(11);
+  print( numeros );
+  
+  final masNumeros = List.generate(100, (int index) => 10);
+  print(masNumeros);
+} 
+
+/*
+
+EJEMPLO 4
+
+*/
+
+void main() {
+  
+//   Map persona = {
+//     'nombre': 'Beatriz',
+//     'edad': 24,
+//     'soltero': false,
+//     true: false,
+//     1: 100,
+//     2: 500,
+//   };
+  
+//   persona.addAll({ 3: 'Juan'});
+  
+  Map<String, dynamic> persona = {
+    'nombre': 'Beatriz',
+    'edad': 24,
+    'soltero': false,
+  };
+
+  print( persona );
+} 
+
+/*
+
+EJEMPLO 5
+
+*/
+
+void main() {
+  
+  final String nombre = 'Beatriz';
+  
+  Saludar(nombre);
+  Saludar();
+  Saludar2(nombre: 'Diana', mensaje: 'Hello');
+} 
+
+// [ ] se utilizan para presetear valores
+void Saludar( [String x = 'No Name'] ) {
+  print('Hola $x');
+}
+
+void Saludar2({
+  required String nombre,
+  required String mensaje,
+  }) {
+  print('$mensaje $nombre');
+}
+
+/*
+
+EJEMPLO 6
+
+*/
+
+void main() {
+  
+  final wolverine = Heroe(nombre: 'Logan', poder: 'Regeneración');
+//   wolverine.nombre = 'Logan';
+//   wolverine.poder = 'Regeneración';
+  
+  print(wolverine);
+  
+} 
+
+class Heroe {
+  String? nombre;
+  String? poder;
+  
+  Heroe({
+    required this.nombre,
+    required this.poder
+  });
+  
+  @override
+  String toString() {
+    return 'HEROE\nNombre: ${this.nombre}\nPoder: ${this.poder}';
+  }
+}
+
+/*
+
+EJEMPLO 7
+
+*/
+
+void main() {
+  
+  final rawJson = {
+    'nombre': 'Tony Stark',
+    'poder': 'Dinero'
+  };
+  
+//   final ironman = new Heroe( nombre: rawJson['nombre']!, poder: rawJson ['poder']! );
+  
+  final ironman = Heroe.fromJson ( rawJson );
+  
+//   final wolverine = new Heroe(nombre: 'Logan', poder: 'Regeneración');
+  
+  print(ironman);
+//   print(wolverine);
+  
+} 
+
+class Heroe {
+  String nombre;
+  String poder;
+  
+  Heroe({
+    required this.nombre,
+    required this.poder
+  });
+  
+  Heroe.fromJson( Map<String, String> json ):
+    this.nombre = json ['nombre']!,
+    this.poder = json ['poder'] ?? 'Sin poder';
+  
+//   @override
+  String toString() {
+    return 'HEROE\nNombre: ${this.nombre}\nPoder: ${this.poder}';
+  }
+}
+
+/*
+
+EJEMPLO 8
+
+*/
+
+import 'dart:math' as math;
+
+void main() {
+  
+  final cuadrado = new Cuadrado( 5 );
+  
+  print('Area: ${cuadrado.calcularArea()}');
+  print('Lado: ${cuadrado.lado}');  
+  print('Area GET: ${cuadrado.area}');
+  cuadrado.area = 100;
+  print('\n\nLado: ${cuadrado.lado}\nArea: ${cuadrado.area}');
+
+}
+
+class Cuadrado {
+  double lado; 
+  
+  Cuadrado( double lado):
+    this.lado = lado;
+  
+  double calcularArea() {
+    return this.lado * this.lado;
+  }
+  
+  double get area {
+    return this.lado * this.lado;
+  }
+  
+  set area( double valor) {
+    this.lado = math.sqrt(valor);
+  }
+}
+
+/*
+
+EJEMPLO 9
+
+*/
+
+/*
+ * El abstract sirve para obligar
+ * a otras clases que tengan los metodos
+ * esperados por el developer
+ */
+
+void main() {
+  
+  final perro = new Perro();
+  final gato = new Gato();
+  
+//   perro.emitirSonido();
+  sonidoAnimal( perro );
+  sonidoAnimal( gato );
+}
+
+void sonidoAnimal(Animal animal){
+  animal.emitirSonido();
+}
+abstract class Animal {
+  int? patas;
+  void emitirSonido();
+}
+
+class Perro implements Animal {
+  int? patas;
+  void emitirSonido () => print('Guauu Guauuuuuuuu');
+}
+
+class Gato implements Animal {
+  int? patas;
+  int? cola;
+  void emitirSonido () => print('Miau');
+}
+
+/*
+
+EJEMPLO 10
+
+*/
+
+void main() {
+  
+  final superman = Heroe('Clark Kent');
+  final luthor = Villano('Lex Luthor');
+  
+  print(superman);
+  print(luthor);
+}
+
+abstract class Personaje {
+  String? poder;
+  String nombre;
+  
+  Personaje( this.nombre );
+  
+  @override
+  String toString() {
+    return '$nombre - $poder';
+  }
+}
+
+class Heroe extends Personaje {
+  
+  int valentia = 100;
+  Heroe( String nombre ): super( nombre );
+}
+
+class Villano extends Personaje {
+  
+  int maldad = 50;
+  Villano( String nombre ): super( nombre );
+}
+
+/*
+
+EJEMPLO 11
+
+*/
+
+abstract class Animal {}
+
+abstract class Mamifero extends Animal {}
+abstract class Ave extends Animal {}
+abstract class Pez extends Animal {}
+
+abstract class Caminante {
+  void caminar() {
+    print("Estoy caminando");
+  }
+}
+
+abstract class Nadador {
+  void nadar() => print('Estoy nadando');
+}
+
+abstract class Volador {
+  void volar() => print('Estoy volando');
+}
+
+class Gato extends Mamifero with Caminante {}
+class Delfin extends Mamifero with Nadador {}
+class Murcielago extends Mamifero with Caminante, Volador {}
+
+class Paloma extends Ave with Caminante, Volador {}
+class Pato extends Ave with Caminante, Nadador, Volador {}
+
+class Tiburon extends Pez with Nadador {}
+class PezVolador extends Pez with Nadador, Volador {}
+
+void main() {
+  Pato pato = Pato();
+  final flipper = Delfin();
+  pato.nadar();
+  flipper.nadar();
+}
+
+/*
+
+EJEMPLO 12
+
+*/
+
+void main() {
+  
+  print('Antes de la petición');
+  
+  httpGet('https://api.nasa.com/aliens')
+    .then( (data) {
+      print( data );
+    });
+  
+  print('Fin del programa');
+  
+}
+
+Future<String> httpGet( String url ) {
+  return Future.delayed( Duration( seconds:3 ), () {
+    return 'Hola Mundo - 3 Segundos';
+  });
+}
+
+/*
+
+EJEMPLO 13
+
+*/
+
+void main() async {
+  
+  print('Antes de la petición');
+  
+  final data = await httpGet('https://api.nasa.com/aliens');
+  print( data );
+  
+//   final nombre = await getNombre('10');
+//   print( nombre );
+  
+//   getNombre('10').then( print );
+  
+  print('Fin del programa');
+  
+}
+
+Future<String> getNombre( String id ) async {
+  return '$id - Fernando';
+}
+
+Future<String> httpGet( String url ) {
+  return Future.delayed( Duration( seconds:3 ), () {
+    return 'Hola Mundo - 3 Segundos';
+  });
+}
