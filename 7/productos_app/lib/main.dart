@@ -9,13 +9,22 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Productos App',
-      initialRoute: LoginScreen.routerName,
+      initialRoute: HomeScreen.routerName,
       routes: {
         HomeScreen.routerName   : ( _ ) => const HomeScreen(),
         LoginScreen.routerName  : ( _ ) => const LoginScreen(),
       },
       theme: ThemeData.light().copyWith(
-        scaffoldBackgroundColor: Colors.grey[300]
+        primaryColor: Colors.indigo,
+        scaffoldBackgroundColor: Colors.grey[300],
+        appBarTheme: const AppBarTheme(
+          elevation: 0,
+          color: Colors.indigo,
+        ),
+        floatingActionButtonTheme: const FloatingActionButtonThemeData(
+          elevation: 0,
+          backgroundColor: Colors.indigo,
+        )
       ),
     );
   }
