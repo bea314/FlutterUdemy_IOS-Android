@@ -1,7 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:productos_app/screens/screens.dart';
+import 'package:provider/provider.dart';
 
-void main() => runApp(MyApp());
+import 'package:productos_app/screens/screens.dart';
+import 'package:productos_app/services/services.dart';
+
+void main() => runApp(const AppState());
+
+class AppState extends StatelessWidget {
+  const AppState({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ProductsService(),)
+      ],
+      child: MyApp(),
+    );
+  }
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -11,8 +28,9 @@ class MyApp extends StatelessWidget {
       title: 'Productos App',
       initialRoute: HomeScreen.routerName,
       routes: {
-        HomeScreen.routerName   : ( _ ) => const HomeScreen(),
-        LoginScreen.routerName  : ( _ ) => const LoginScreen(),
+        HomeScreen.routerName     : ( _ ) => const HomeScreen(),
+        LoginScreen.routerName    : ( _ ) => const LoginScreen(),
+        ProductScreen.routerName  : ( _ ) => const ProductScreen(),
       },
       theme: ThemeData.light().copyWith(
         primaryColor: Colors.indigo,

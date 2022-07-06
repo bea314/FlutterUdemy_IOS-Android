@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class ProductCard extends StatefulWidget {
-  ProductCard({Key? key}) : super(key: key);
+import 'package:productos_app/models/models.dart';
 
-  @override
-  State<ProductCard> createState() => _ProductCardState();
-}
 
-class _ProductCardState extends State<ProductCard> {
+class ProductCard extends StatelessWidget {
+  const ProductCard({Key? key, required this.products}) : super(key: key);
+
+  final Product products;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -17,11 +17,11 @@ class _ProductCardState extends State<ProductCard> {
       decoration: _cardBorders(),
       child: Stack(
         alignment: Alignment.bottomLeft,
-        children: const [
-          _BackgroundImage(),
-          _ProductDetails(),
-          Positioned( top:0, right:0, child: _PriceTag() ),
-          Positioned( top:0, left:0, child: _NotAvailable() ),
+        children: [
+          _BackgroundImage( url: products.picture, ),
+          _ProductDetails(name: products.name, id: products.id!,),
+          Positioned( top:0, right:0, child: _PriceTag(price: products.price,) ),
+          if(!products.available)Positioned( top:0, left:0, child: _NotAvailable(isAvailable: products.available,) ),
         ],
       ),
     );
@@ -44,8 +44,10 @@ class _ProductCardState extends State<ProductCard> {
 
 class _NotAvailable extends StatelessWidget {
   const _NotAvailable({
-    Key? key,
+    Key? key, required this.isAvailable,
   }) : super(key: key);
+  
+  final bool isAvailable;
 
   @override
   Widget build(BuildContext context) {
@@ -58,11 +60,11 @@ class _NotAvailable extends StatelessWidget {
         color: Colors.yellow[800],
         borderRadius: const BorderRadius.only(topLeft: Radius.circular(25), bottomRight: Radius.circular(25),)
       ),
-      child: const FittedBox(
+      child: FittedBox(
         fit: BoxFit.contain,
         child: Text(
-          'No disponible',
-          style: TextStyle( fontSize: 20, color: Colors.white, ),
+          (isAvailable) ?'Disponible' :'No disponible' ,
+          style: const TextStyle( fontSize: 20, color: Colors.white, ),
         ),
       ),
     );
@@ -71,8 +73,10 @@ class _NotAvailable extends StatelessWidget {
 
 class _PriceTag extends StatelessWidget {
   const _PriceTag({
-    Key? key,
+    Key? key, required this.price,
   }) : super(key: key);
+
+  final double price;
 
   @override
   Widget build(BuildContext context) {
@@ -85,15 +89,18 @@ class _PriceTag extends StatelessWidget {
         color: Colors.indigo,
         borderRadius: BorderRadius.only(topRight: Radius.circular(25), bottomLeft: Radius.circular(25),)
       ),
-      child: const FittedBox(fit: BoxFit.contain, child: Text('\$103.99', style: TextStyle( fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold ),)),
+      child: FittedBox(fit: BoxFit.contain, child: Text('\$$price', style: const TextStyle( fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold ),)),
     );
   }
 }
 
 class _ProductDetails extends StatelessWidget {
   const _ProductDetails({
-    Key? key,
+    Key? key, required this.name, required this.id,
   }) : super(key: key);
+
+  final String name;
+  final String id;
 
   @override
   Widget build(BuildContext context) {
@@ -106,16 +113,16 @@ class _ProductDetails extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
+        children: [
           Text(
-            'Disco Duro G', 
-            style: TextStyle( fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold ),
+            name, 
+            style: const TextStyle( fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
           Text(
-            'Id del disco duro', 
-            style: TextStyle( fontSize: 15, color: Colors.white, fontWeight: FontWeight.w300 ),
+            id, 
+            style: const TextStyle( fontSize: 15, color: Colors.white, fontWeight: FontWeight.w300 ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           )
@@ -134,9 +141,11 @@ class _ProductDetails extends StatelessWidget {
 
 class _BackgroundImage extends StatelessWidget {
   const _BackgroundImage({
-    Key? key,
+    Key? key, this.url,
   }) : super(key: key);
 
+  final String? url;
+  
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
@@ -144,10 +153,13 @@ class _BackgroundImage extends StatelessWidget {
       child: Container(
         width: double.infinity,
         height: 400,
-        child: const FadeInImage(
-          placeholder: AssetImage('assets/jar-loading.gif'),
-          image: NetworkImage('https://via.placeholder.com/400x300/f6f6f6'),
+        child: (url == null) 
+        ? const Image(image: AssetImage('assets/no-image.png'), fit: BoxFit.cover,)
+        : FadeInImage(
+          placeholder: const AssetImage('assets/jar-loading.gif'),
+          image: NetworkImage(url!,),
           fit: BoxFit.cover,
+          imageErrorBuilder: (_,__,error) => Image.asset('assets/no-image.png', fit: BoxFit.cover,),
         ),
       ),
     );
