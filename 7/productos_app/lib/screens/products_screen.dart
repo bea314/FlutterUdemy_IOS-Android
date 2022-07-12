@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import 'package:image_picker/image_picker.dart';
+
 import 'package:productos_app/providers/product_form_provider.dart';
 import 'package:productos_app/services/product_service.dart';
 
@@ -61,8 +63,21 @@ class _ProductScreenBody extends StatelessWidget {
                     top: 40, 
                     right: 40,
                     child: IconButton(
-                      onPressed: () {
-                        // TODO Camara o galeria
+                      onPressed: () async {
+                        
+                        final picker = ImagePicker();
+                        final XFile? pickedFile = await picker.pickImage(
+                          //source: ImageSource.camera,
+                          source: ImageSource.gallery,
+                          imageQuality: 100
+                        );
+
+                        if( pickedFile == null ) {
+                          print('No seleccionó nada');
+                          return;
+                        }
+
+                        productService.updateSelectedProductImage(pickedFile.path);
                       },
                       icon: const Icon(Icons.camera_alt_outlined, size: 40, color: Colors.white,))
                   )
@@ -75,11 +90,20 @@ class _ProductScreenBody extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        child: const Icon( Icons.save_outlined ),
-        onPressed: () async {
+        onPressed: productService.isSaving
+        ? null
+        : () async {
           if( !productForm.isValidForm() ) return;
-          productService.saveOrCreateProduct(productForm.product);
+
+          final String imageUrl = await productService.uploadImage();
+
+          if ( imageUrl.isNotEmpty || imageUrl != '' ) { productForm.product.picture = imageUrl; }
+
+          await productService.saveOrCreateProduct(productForm.product);
         },
+        child: productService.isSaving
+        ? const CircularProgressIndicator( color: Colors.white, )
+        : const Icon( Icons.save_outlined ),
       ),
     );
   }
@@ -113,7 +137,7 @@ class _ProductForm extends StatelessWidget {
               initialValue: product.name,
               onChanged: ( value ) => product.name = value,
               validator: ( value ) {
-                if( value == null || value.length < 1 ) {
+                if( value == null || value.isEmpty ) {
                   return 'El nombre es obligatorio';
                 }
               },
@@ -136,7 +160,7 @@ class _ProductForm extends StatelessWidget {
                 }
               },
               validator: ( value ) {
-                if( value == null || value.length < 1 ) {
+                if( value == null || value.isEmpty ) {
                   return 'El nombre es obligatorio';
                 }
               },
