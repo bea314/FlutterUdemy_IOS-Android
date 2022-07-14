@@ -2,14 +2,18 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:productos_app/models/models.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+
+import 'package:productos_app/models/models.dart';
 
 class ProductsService extends ChangeNotifier {
 
   final String _baseUrl = "flutter-varios-d92a5-default-rtdb.firebaseio.com";
   final List<Product> products = [];
   late Product selectedProduct;
+
+  final _storage = const FlutterSecureStorage();
 
   File? newPictureFile;
   
@@ -25,11 +29,15 @@ class ProductsService extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
 
-    final url = Uri.https( _baseUrl, 'products.json');
+    final url = Uri.https( _baseUrl, 'products.json', {
+      'auth': await _storage.read(key: 'idToken') ?? ''
+    });
     final resp = await http.get(url);
 
     final Map<String, dynamic> productsMap = json.decode( resp.body );
-
+    
+    if (productsMap == null ) return [];
+    
     productsMap.forEach((key, value) {
       final tempProduct = Product.fromMap(value);
       tempProduct.id = key;
@@ -59,7 +67,9 @@ class ProductsService extends ChangeNotifier {
 
   Future<String> updateProduct( Product product ) async {
 
-    final url = Uri.https( _baseUrl, 'products/${product.id}.json');
+    final url = Uri.https( _baseUrl, 'products/${product.id}.json', {
+      'auth': await _storage.read(key: 'idToken') ?? ''
+    });
     final resp = await http.put(url, body: product.toJson());
     final decodedData = resp.body;
 
