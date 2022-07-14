@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:productos_app/services/notifications_service.dart';
 import 'package:provider/provider.dart';
 
 import 'package:productos_app/providers/login_form_provider.dart';
@@ -125,6 +126,7 @@ class _LoginForm extends StatelessWidget {
                 } else {
                   // TODO: Mostrar error en pantalla
                   print( errorMessage );
+                  NotificationsService.showSnackbar(errorMessage);
                   loginForm.isLoading = false;
                 }
               },

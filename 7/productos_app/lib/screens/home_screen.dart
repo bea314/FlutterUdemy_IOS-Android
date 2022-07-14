@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:productos_app/services/auth_service.dart';
 import 'package:provider/provider.dart';
 
 import 'package:productos_app/models/models.dart';
@@ -17,12 +18,22 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final productsService = Provider.of<ProductsService>(context);
+    final authService = Provider.of<AuthService>(context, listen: false);
 
     if( productsService.isLoading ) return const LoadingScreen();
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Productos'),
+        actions: [
+          IconButton(
+          onPressed: () {
+            authService.logout();
+            Navigator.pushReplacementNamed(context, LoginScreen.routerName);
+          }, 
+          icon: const Icon( Icons.logout_outlined )
+          ),
+        ]
       ),
       body: ListView.builder(
         itemCount: productsService.products.length,

@@ -38,6 +38,7 @@ class MyApp extends StatelessWidget {
         LoginScreen.routerName      : ( _ ) => const LoginScreen(),
         RegisterScreen.routerName   : ( _ ) => const RegisterScreen(),
       },
+      scaffoldMessengerKey: NotificationsService.messengerKey,
       theme: ThemeData.light().copyWith(
         primaryColor: Colors.indigo,
         scaffoldBackgroundColor: Colors.grey[300],
