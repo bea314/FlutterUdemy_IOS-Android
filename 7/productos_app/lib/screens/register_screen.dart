@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:productos_app/screens/login_screen.dart';
 import 'package:provider/provider.dart';
-
 import 'package:productos_app/providers/login_form_provider.dart';
 import 'package:productos_app/screens/screens.dart';
 import 'package:productos_app/widgets/widgets.dart';
 import 'package:productos_app/ui/input_decorations.dart';
 
-class LoginScreen extends StatelessWidget {
+class RegisterScreen extends StatelessWidget {
    
-  static const String routerName = 'login';
+  static const String routerName = 'register';
 
-  const LoginScreen({Key? key}) : super(key: key);
+  const RegisterScreen({Key? key}) : super(key: key);
   
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class LoginScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     const SizedBox(height: 10,),
-                    Text('Login', style: Theme.of(context).textTheme.headline4),
+                    Text('Register', style: Theme.of(context).textTheme.headline4),
                     const SizedBox(height: 30,),
                     ChangeNotifierProvider(
                       create: (_) => LoginFormProvider(),
@@ -36,15 +36,14 @@ class LoginScreen extends StatelessWidget {
 
               const SizedBox( height: 50, ),
               TextButton(
-                onPressed: () => Navigator.pushReplacementNamed(context, RegisterScreen.routerName),
+                onPressed: () => Navigator.pushReplacementNamed(context, LoginScreen.routerName), 
                 style: ButtonStyle(
                   overlayColor: MaterialStateProperty.all( Colors.indigo.withOpacity(0.1) ),
                   shape: MaterialStateProperty.all( StadiumBorder() ),
                 ), 
-                child: const Text('¿No tienes cuenta?', style: TextStyle( fontSize: 18, color: Colors.indigo ), ),
+                child: const Text('¿Ya tienes una cuenta?', style: TextStyle( fontSize: 18, color: Colors.indigo ), )
               ),
               const SizedBox( height: 50, ),
-
             ],
           ),
         )
