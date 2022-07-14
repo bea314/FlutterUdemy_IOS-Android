@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:productos_app/screens/login_screen.dart';
 import 'package:provider/provider.dart';
+
 import 'package:productos_app/providers/login_form_provider.dart';
+import 'package:productos_app/services/services.dart';
+
 import 'package:productos_app/screens/screens.dart';
-import 'package:productos_app/widgets/widgets.dart';
 import 'package:productos_app/ui/input_decorations.dart';
+import 'package:productos_app/widgets/widgets.dart';
 
 class RegisterScreen extends StatelessWidget {
    
@@ -106,25 +108,35 @@ class _LoginForm extends StatelessWidget {
               disabledColor: Colors.grey,
               elevation: 0,
               color: Colors.deepPurple,
+              onPressed: (loginForm.isLoading)
+              ? null
+              : () async {
+                FocusScope.of(context).unfocus();
+                final authService = Provider.of<AuthService>(context, listen: false);
+
+                if (!loginForm.isValidForm()) return;
+                loginForm.isLoading = true;
+                
+                //
+                final String? errorMessage = await authService.createUser(loginForm.email, loginForm.password);
+
+                if ( errorMessage == null ){
+                  () => Navigator.pushReplacementNamed(context, HomeScreen.routerName);
+                } else {
+                  // TODO: Mostrar error en pantalla
+                  print( errorMessage );
+                }
+                loginForm.isLoading = false;
+              },
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 15),
                 child: Text(
                   loginForm.isLoading
                   ? 'Espere...'
                   : 'Ingresar',
-                  style: TextStyle(color: Colors.white),
+                  style: const TextStyle(color: Colors.white),
                 ),
               ),
-              onPressed: (loginForm.isLoading)
-              ? null
-              : () async {
-                FocusScope.of(context).unfocus();
-                if (!loginForm.isValidForm()) return;
-                loginForm.isLoading = true;
-                await Future.delayed(Duration(seconds: 1));
-                loginForm.isLoading = false;
-                Navigator.pushReplacementNamed(context, HomeScreen.routerName);
-              },
             )
           ],
         ),
