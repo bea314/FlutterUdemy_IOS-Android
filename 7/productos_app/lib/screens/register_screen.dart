@@ -117,16 +117,15 @@ class _LoginForm extends StatelessWidget {
                 if (!loginForm.isValidForm()) return;
                 loginForm.isLoading = true;
                 
-                //
                 final String? errorMessage = await authService.createUser(loginForm.email, loginForm.password);
 
                 if ( errorMessage == null ){
-                  () => Navigator.pushReplacementNamed(context, HomeScreen.routerName);
+                  Navigator.pushReplacementNamed(context, HomeScreen.routerName);
                 } else {
                   // TODO: Mostrar error en pantalla
                   print( errorMessage );
+                  loginForm.isLoading = false;
                 }
-                loginForm.isLoading = false;
               },
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 15),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:productos_app/screens/check_auth_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'package:productos_app/screens/screens.dart';
@@ -27,12 +28,15 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Productos App',
-      initialRoute: LoginScreen.routerName,
+      initialRoute: CheckAuthScreen.routerName,
       routes: {
-        HomeScreen.routerName     : ( _ ) => const HomeScreen(),
-        LoginScreen.routerName    : ( _ ) => const LoginScreen(),
-        RegisterScreen.routerName : ( _ ) => const RegisterScreen(),
-        ProductScreen.routerName  : ( _ ) => const ProductScreen(),
+        CheckAuthScreen.routerName  : ( _ ) => const CheckAuthScreen(),
+
+        HomeScreen.routerName       : ( _ ) => const HomeScreen(),
+        ProductScreen.routerName    : ( _ ) => const ProductScreen(),
+
+        LoginScreen.routerName      : ( _ ) => const LoginScreen(),
+        RegisterScreen.routerName   : ( _ ) => const RegisterScreen(),
       },
       theme: ThemeData.light().copyWith(
         primaryColor: Colors.indigo,
