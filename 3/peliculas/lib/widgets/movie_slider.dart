@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:peliculas/models/models.dart';
 
@@ -22,7 +20,7 @@ class MovieSlider extends StatefulWidget {
 
 class _MovieSliderState extends State<MovieSlider> {
 
-  final ScrollController scrollController = new ScrollController();
+  final ScrollController scrollController = ScrollController();
 
   @override
   void initState() {
@@ -43,7 +41,7 @@ class _MovieSliderState extends State<MovieSlider> {
 
   @override
   Widget build(BuildContext context) {
-    if ( this.widget.movies.length == 0 ) {
+    if ( widget.movies.isEmpty ) {
       return const SizedBox(
         width: double.infinity,
         height: 280,

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -28,14 +27,14 @@ class MoviesProvider extends ChangeNotifier {
   );
 
   final StreamController<List<Movie>> _suggestionStreamController = StreamController.broadcast();
-  Stream<List<Movie>> get suggestionStream => this._suggestionStreamController.stream;
+  Stream<List<Movie>> get suggestionStream => _suggestionStreamController.stream;
 
   MoviesProvider() {
     print('MoviesProvider inicializado');
 
-    this.getOnDisplayMovies();
-    this.getPopularMovies();
-    this.getUpcomingMovies();
+    getOnDisplayMovies();
+    getPopularMovies();
+    getUpcomingMovies();
   }
 
   Future<String> _getJsonData(String endpoint, [int page = 1]) async {
